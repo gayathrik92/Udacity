@@ -27,6 +27,12 @@ Resources:
     Type: AWS::EC2::LaunchTemplate
     Properties: 
       LaunchTemplateData:
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            sudo apt-get update -y
+            sudo apt-get install nginx -y
+            sudo service nginx start 
         ImageId: ami-0866a3c8686eaeeba
         SecurityGroupIds:
           - !Ref SecurityGroup
@@ -131,9 +137,7 @@ Resources:
               - 's3:PutObject'
               - 's3:GetObject'
               Resource:
-                - !GetAtt S3Bucket.Arn
-              ManagedPolicyArns:
-                - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore  
+                - !GetAtt S3Bucket.Arn 
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
